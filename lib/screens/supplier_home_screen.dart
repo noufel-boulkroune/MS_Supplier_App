@@ -23,7 +23,7 @@ class _SupplierHomeScreenState extends State<SupplierHomeScreen> {
     const HomeScreen(),
     const CategoryScreen(),
     StoresScreen(),
-    const DashboardScreen(),
+    DashboardScreen(),
     const UploadProductsScreen(),
   ];
 

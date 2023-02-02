@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/supplier_home_screen.dart';
 import '../widgets/auth_widgets.dart';
 import '../widgets/snackbar.dart';
@@ -19,6 +20,7 @@ final TextEditingController _emailControler = TextEditingController();
 final TextEditingController _passwordControler = TextEditingController();
 
 class _SupplierLoginScreenState extends State<SupplierLoginScreen> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   late String email, password, profileImage;
   bool processing = false;
 
@@ -60,6 +62,9 @@ class _SupplierLoginScreenState extends State<SupplierLoginScreen> {
               _formKey.currentState!.reset();
               processing = false;
             });
+            User? user = FirebaseAuth.instance.currentUser;
+            final SharedPreferences pref = await _prefs;
+            pref.setString("supplierId", user!.uid);
             await Future.delayed(const Duration(microseconds: 10)).whenComplete(
                 () => Navigator.pushReplacementNamed(
                     context, SupplierHomeScreen.routeName));

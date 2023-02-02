@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ms_supplier_app/auth/supplier_login_screen.dart';
+import 'package:ms_supplier_app/screens/supplier_home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {
   static const routeName = "onboarding-screen";
@@ -13,13 +15,22 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   Timer? countDownTimer;
   int seconds = 5;
   List<int> discountList = [];
+  String supplierId = "";
 
   @override
   void initState() {
     startTimer();
+    _prefs.then((SharedPreferences prefs) {
+      return prefs.getString('supplierId') ?? "";
+    }).then((String prefValue) {
+      setState(() {
+        supplierId = prefValue;
+      });
+    });
 
     super.initState();
   }
@@ -31,8 +42,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           seconds--;
         } else if (seconds == 0) {
           stopTimer();
-          Navigator.pushReplacementNamed(
-              context, SupplierLoginScreen.routeName);
+          supplierId != ""
+              ? Navigator.pushReplacementNamed(
+                  context, SupplierHomeScreen.routeName)
+              : Navigator.pushReplacementNamed(
+                  context, SupplierLoginScreen.routeName);
         }
       });
     });
@@ -62,8 +76,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             GestureDetector(
               onTap: () {
                 stopTimer();
-                Navigator.pushReplacementNamed(
-                    context, SupplierLoginScreen.routeName);
+                supplierId != ""
+                    ? Navigator.pushReplacementNamed(
+                        context, SupplierHomeScreen.routeName)
+                    : Navigator.pushReplacementNamed(
+                        context, SupplierLoginScreen.routeName);
               },
               child: SizedBox(
                 height: MediaQuery.of(context).size.height,

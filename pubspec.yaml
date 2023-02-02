@@ -58,6 +58,7 @@ dependencies:
   expandable: ^5.0.1
   country_state_city_picker: ^1.2.8
   flutter_pw_validator: ^1.5.0
+  shared_preferences: ^2.0.17
 
 dev_dependencies:
   flutter_test:
