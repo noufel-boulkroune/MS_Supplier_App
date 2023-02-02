@@ -6,8 +6,11 @@ import 'package:ms_supplier_app/screens/dashboard_components/manage_products_scr
 import 'package:ms_supplier_app/screens/dashboard_components/statics_screen.dart';
 import 'package:ms_supplier_app/screens/dashboard_components/supplier_orders_screen.dart';
 import 'package:ms_supplier_app/screens/minor_screen/visit_store_screen.dart';
+import 'package:ms_supplier_app/screens/onboarding_screen.dart';
 import 'package:ms_supplier_app/widgets/appbar_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../auth/supplier_login_screen.dart';
 import '../widgets/alert_dialog.dart';
 
 List<String> lable = [
@@ -38,7 +41,8 @@ List<Widget> pages = [
 ];
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +62,14 @@ class DashboardScreen extends StatelessWidget {
                   Navigator.of(context).pop();
                 },
                 tabYes: () async {
-                  await FirebaseAuth.instance.signOut();
+                  final SharedPreferences pref = await _prefs;
+                  //Clearing the supplierId Feild
+                  pref.setString("supplierId", "");
                   // ignore: use_build_context_synchronously
                   Navigator.of(context).pop();
                   // ignore: use_build_context_synchronously
-                  Navigator.pushReplacementNamed(context, "/");
+                  Navigator.pushReplacementNamed(
+                      context, OnboardingScreen.routeName);
                 },
               );
             },

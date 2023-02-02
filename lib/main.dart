@@ -29,7 +29,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // initialRoute: OnboardingScreen.routeName,
       initialRoute: OnboardingScreen.routeName,
       routes: {
         SupplierHomeScreen.routeName: (context) => const SupplierHomeScreen(),
