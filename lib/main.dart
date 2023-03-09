@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:ms_supplier_app/auth/forgot_password.dart';
 import 'package:ms_supplier_app/auth/update_password.dart';
@@ -7,14 +8,24 @@ import 'package:ms_supplier_app/screens/minor_screen/edit_product.dart';
 import 'package:ms_supplier_app/screens/minor_screen/edit_store.dart';
 import 'package:ms_supplier_app/screens/onboarding_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:ms_supplier_app/services/notification_services.dart';
 
 import '../screens/supplier_home_screen.dart';
 import 'auth/supplier_login_screen.dart';
 import 'auth/supplier_signup_screen.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+  print("Handling a background message: ${message.notification!.title}");
+  print("Handling a background message: ${message.notification!.body}");
+  print("Handling a background message: ${message.data}");
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  NotificationServices.creteNotificationChannel();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
 }
 

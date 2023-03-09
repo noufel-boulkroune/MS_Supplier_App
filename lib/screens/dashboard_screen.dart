@@ -10,7 +10,6 @@ import 'package:ms_supplier_app/screens/onboarding_screen.dart';
 import 'package:ms_supplier_app/widgets/appbar_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../auth/supplier_login_screen.dart';
 import '../widgets/alert_dialog.dart';
 
 List<String> lable = [

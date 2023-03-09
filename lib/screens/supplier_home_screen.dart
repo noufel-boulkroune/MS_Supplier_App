@@ -1,11 +1,13 @@
-import 'package:badges/badges.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:badges/badges.dart' as badge;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ms_supplier_app/screens/dashboard_screen.dart';
 import 'package:ms_supplier_app/screens/home_screen.dart';
 import 'package:ms_supplier_app/screens/stores_screen.dart';
 import 'package:ms_supplier_app/screens/upload_products_screen.dart';
+import 'package:ms_supplier_app/services/notification_services.dart';
 
 import 'category_screen.dart';
 
@@ -18,6 +20,21 @@ class SupplierHomeScreen extends StatefulWidget {
 }
 
 class _SupplierHomeScreenState extends State<SupplierHomeScreen> {
+  @override
+  void initState() {
+    FirebaseMessaging.instance.getInitialMessage();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+        NotificationServices.displayNotification(message);
+      }
+    });
+    super.initState();
+  }
+
   int _selectedIndex = 0;
   final List<Widget> _tabs = [
     const HomeScreen(),
@@ -76,10 +93,11 @@ class _SupplierHomeScreenState extends State<SupplierHomeScreen> {
                 label: "Stores",
               ),
               BottomNavigationBarItem(
-                icon: Badge(
+                icon: badge.Badge(
                     showBadge: order.isEmpty ? false : true,
-                    animationType: BadgeAnimationType.slide,
-                    badgeColor: Colors.lightBlueAccent,
+                    badgeAnimation: const badge.BadgeAnimation.slide(),
+                    badgeStyle: const badge.BadgeStyle(
+                        badgeColor: Colors.lightBlueAccent),
                     badgeContent: Text(order.length.toString()),
                     child: const Icon(Icons.dashboard)),
                 label: "Dashboard",
